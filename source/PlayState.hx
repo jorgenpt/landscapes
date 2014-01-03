@@ -25,8 +25,6 @@ class PlayState extends FlxState
 		FlxG.mouse.show();
 		#end
 
-		onResize(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
-
 		add(new Board());
 		
 		super.create();

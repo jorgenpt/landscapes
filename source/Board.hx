@@ -8,6 +8,29 @@ import haxe.ds.IntMap;
 class Board extends FlxGroup
 {
 	var tiles : IntMap<IntMap<Tile>>;
+	var remainingTiles : Array<TileType>;
+	var pendingTile : Null<PendingTile>;
+
+	public function new()
+	{
+		super();
+
+		TileType.loadTiles();
+
+		remainingTiles = new Array<TileType>();
+		for (name in TileType.getAllNames())
+		{
+			var type = TileType.get(name);
+			for (i in 0 ... type.boardCount)
+				remainingTiles.push(type);
+		}
+
+		tiles = new IntMap<IntMap<Tile>>();
+
+		var tile = new Tile(0, 0, "initial-tile");
+		insertTile(tile);
+		FlxG.camera.focusOn(tile.getMidpoint());
+	}
 
 	public function getTile(x : Int, y : Int) : Null<Tile>
 	{
@@ -38,29 +61,43 @@ class Board extends FlxGroup
 		column.set(y, tile);
 	}
 
-	public function new()
-	{
-		super();
-
-		TileType.loadTiles();
-
-		tiles = new IntMap<IntMap<Tile>>();
-
-		var tile = new Tile(0, 0, "initial-tile");
-		insertTile(tile);
-		FlxG.camera.focusOn(tile.getMidpoint());
-
-		insertTile(new Tile(1, 0, "straight-road"));
-		insertTile(new Tile(2, 0, "straight-road"));
-		insertTile(new Tile(3, 0, "ell-road", 3));
-		insertTile(new Tile(3, -1, "straight-road", 3));
-	}
-
 	public override function update()
 	{
+		super.update();
+
 		if (FlxG.mouse.justPressed)
 		{
-			add(new PendingTile("straight-road"));
+			if (pendingTile == null)
+			{
+				FlxG.mouse.hide();
+				var type = remainingTiles.splice(Std.random(remainingTiles.length), 1).pop();
+				pendingTile = new PendingTile(this, type);
+				add(pendingTile);
+			}
+			else
+			{
+				if (pendingTile.getPositionState() == ValidPosition)
+				{
+					insertTile(pendingTile.createTile());
+					FlxG.mouse.show();
+					remove(pendingTile);
+					pendingTile.destroy();
+					pendingTile = null;
+				}
+			}
 		}
+
+		if (FlxG.keys.justPressed.SPACE && pendingTile != null)
+			pendingTile.rotate();
+	}
+
+	public static function getX(boardX : Int)
+	{
+		return (GameClass.BOARD_SIZE / 2.0 + boardX - 1) * TileBase.TILE_SIZE;
+	}
+
+	public static function getY(boardY : Int)
+	{
+		return (GameClass.BOARD_SIZE / 2.0 + boardY - 1) * TileBase.TILE_SIZE;
 	}
 }

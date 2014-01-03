@@ -48,10 +48,4 @@ class PlayState extends FlxState
 	{
 		super.update();
 	}	
-
-	override public function onResize(width:Int, height:Int):Void
-	{
-		// Currently, it sets the main camera size based on the game size, not the window size, so we override it here.
-		FlxG.camera.setSize(Math.ceil(width / FlxG.camera.zoom), Math.ceil(height / FlxG.camera.zoom));
-	}
 }

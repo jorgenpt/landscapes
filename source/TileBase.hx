@@ -9,7 +9,7 @@ class TileBase extends FlxSprite
 	public var rotation(default, null) : Int;
 	public var type(default, null) : TileType;
 
-	public function new(name : String, rotation : Int = 0)
+	public function new(name : String, rotation : Int)
 	{
 		super();
 

@@ -13,6 +13,8 @@ import flixel.util.FlxMath;
  */
 class PlayState extends FlxState
 {
+	public var board(default, null) : Board;
+
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -25,8 +27,9 @@ class PlayState extends FlxState
 		FlxG.mouse.show();
 		#end
 
-		add(new Board());
-		
+		board = new Board();
+		add(board);
+
 		super.create();
 	}
 	

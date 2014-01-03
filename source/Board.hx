@@ -52,6 +52,15 @@ class Board extends FlxGroup
 
 		insertTile(new Tile(1, 0, "straight-road"));
 		insertTile(new Tile(2, 0, "straight-road"));
+		insertTile(new Tile(3, 0, "ell-road", 3));
 		insertTile(new Tile(3, -1, "straight-road", 3));
+	}
+
+	public override function update()
+	{
+		if (FlxG.mouse.justPressed)
+		{
+			add(new PendingTile("straight-road"));
+		}
 	}
 }

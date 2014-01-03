@@ -54,10 +54,15 @@ class TileType
 	{
 		types.set("initial-tile", new TileType("initial-tile", City, Road, Grass, Road));
 		types.set("straight-road", new TileType("straight-road", Grass, Road, Grass, Road));
+		types.set("ell-road", new TileType("ell-road", Grass, Road, Grass, Road));
+		types.set("jay-road", new TileType("jay-road", Grass, Road, Grass, Road));
 	}
 
 	public static function get(name : String)
 	{
+		if (!types.exists(name))
+			throw "Invalid tile name '" + name + "'";
+
 		return types.get(name);
 	}
 }

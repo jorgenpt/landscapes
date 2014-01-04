@@ -11,6 +11,19 @@ enum Edge {
 	City;
 }
 
+class Edges {
+	public static function fromString(edgeName : String)
+	{
+		return switch (edgeName.toUpperCase())
+		{
+			case "G": Grass;
+			case "R": Road;
+			case "C": City;
+			default: throw 'Invalid edgeName: $edgeName';
+		}
+	}
+}
+
 enum Direction {
 	West;
 	South;
@@ -26,23 +39,69 @@ class Directions {
 	}
 }
 
+enum Quadrant {
+	Northwest;
+	Southwest;
+	Southeast;
+	Northeast;
+}
+
+typedef GrassGroups = Vector<Vector<Quadrant>>;
+
+class Quadrants {
+	public static function fromString(quadrantName : String)
+	{
+		return switch (quadrantName.toUpperCase())
+		{
+			case "NW": Northwest;
+			case "SW": Southwest;
+			case "SE": Southeast;
+			case "NE": Northeast;
+			default: throw 'Invalid quadrantName: $quadrantName';
+		}
+	}
+}
+
 class TileType 
 {
 	public var edges(default, null) : Vector<Edge>;
+	public var grassGroups(default, null) : GrassGroups;
 	public var bitmapData(default, null) : BitmapData;
 	public var name(default, null) : String;
 	public var boardCount(default, null) : Int;
 
-	public function new(name : String, boardCount : Int, north : Edge, east : Edge, south : Edge, west : Edge)
+	public function new(name : String, tileInfo : Dynamic)
 	{
 		this.name = name;
-		this.boardCount = boardCount;
-		this.bitmapData = FlxAssets.getBitmapData("assets/images/tiles/" + name + ".png");
-		this.edges = new Vector<Edge>(4);
-		edges[Directions.toIndex(North)] = north;
-		edges[Directions.toIndex(East)] = east;
-		edges[Directions.toIndex(South)] = south;
-		edges[Directions.toIndex(West)] = west;
+		boardCount = tileInfo.count;
+		bitmapData = FlxAssets.getBitmapData("assets/images/tiles/" + name + ".png");
+
+		var edgeList : Array<String> = tileInfo.edges;
+
+		if (edgeList == null || edgeList.length != 4)
+			throw "edgeList not valid for tile $name: $edgeList";
+
+		edges = new Vector<Edge>(4);
+		edges[Directions.toIndex(North)] = Edges.fromString(edgeList[0]);
+		edges[Directions.toIndex(East)] = Edges.fromString(edgeList[1]);
+		edges[Directions.toIndex(South)] = Edges.fromString(edgeList[2]);
+		edges[Directions.toIndex(West)] = Edges.fromString(edgeList[3]);
+
+		var grassGroupsList : Array<Array<String>> = tileInfo.grassGroups;
+		if (grassGroupsList == null)
+			grassGroups = new GrassGroups(0);
+		else
+		{
+			grassGroups = new GrassGroups(grassGroupsList.length);
+			for (i in 0...grassGroupsList.length)
+			{
+				var quadrants = grassGroupsList[i];
+				grassGroups[i] = new Vector<Quadrant>(quadrants.length);
+
+				for (j in 0...quadrants.length)
+					grassGroups[i][j] = Quadrants.fromString(quadrants[j]);
+			}
+		}
 	}
 
 	static var types : StringMap<TileType>;
@@ -53,9 +112,13 @@ class TileType
 
 	public static function loadTiles()
 	{
-		types.set("initial-tile", new TileType("initial-tile", 0, City, Road, Grass, Road));
-		types.set("straight-road", new TileType("straight-road", 8, Grass, Road, Grass, Road));
-		types.set("jay-road", new TileType("jay-road", 9, Road, Road, Grass, Grass));
+		var jsonData = openfl.Assets.getText("assets/data/tiles.json");
+		var tiles = haxe.Json.parse(jsonData);
+		for (tileName in Reflect.fields(tiles))
+		{
+			var tileInfo = Reflect.field(tiles, tileName);
+			types.set(tileName, new TileType(tileName, tileInfo));
+		}
 	}
 
 	public static function get(name : String)

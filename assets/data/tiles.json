@@ -1,0 +1,17 @@
+{
+	"initial-tile": {
+		"count": 0,
+		"edges": ["C", "R", "G", "R"],
+		"grassGroups": [["NW", "NE"], ["SW", "SE"]]
+	},
+	"jay-road": {
+		"count": 9,
+		"edges": ["R", "R", "G", "G"],
+		"grassGroups": [["NE"], ["NW", "SW", "SE"]]
+	},
+	"straight-road": {
+		"count": 8,
+		"edges": ["G", "R", "G", "R"],
+		"grassGroups": [["NE", "NW"], ["SW", "SE"]]
+	}
+}

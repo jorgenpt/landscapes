@@ -55,7 +55,7 @@ class TileType
 	{
 		types.set("initial-tile", new TileType("initial-tile", 0, City, Road, Grass, Road));
 		types.set("straight-road", new TileType("straight-road", 8, Grass, Road, Grass, Road));
-		types.set("jay-road", new TileType("jay-road", 9, Road, Grass, Grass, Road));
+		types.set("jay-road", new TileType("jay-road", 9, Road, Road, Grass, Grass));
 	}
 
 	public static function get(name : String)

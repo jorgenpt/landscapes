@@ -1,7 +1,6 @@
-package;
+package tiles;
 
-
-class Tile extends TileBase
+class BoardTile extends TileBase
 {
 	public var boardX(default, set) : Int;
 	public var boardY(default, set) : Int;

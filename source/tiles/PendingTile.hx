@@ -1,4 +1,4 @@
-package;
+package tiles;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -43,9 +43,9 @@ class PendingTile extends TileBase
 		this.validPositionMarker = this.invalidPositionMarker = null;
 	}
 
-	public function createTile() : Tile
+	public function createBoardTile() : BoardTile
 	{
-		return new Tile(boardX, boardY, type, rotation);
+		return new BoardTile(boardX, boardY, type, rotation);
 	}
 
 	public override function update()

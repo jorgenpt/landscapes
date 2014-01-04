@@ -1,4 +1,4 @@
-package;
+package tiles;
 
 import flash.display.BitmapData;
 import flixel.system.FlxAssets;

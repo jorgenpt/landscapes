@@ -1,8 +1,8 @@
-package;
+package tiles;
 
 import flixel.FlxSprite;
 
-import TileType;
+import tiles.TileType;
 
 class TileBase extends FlxSprite
 {

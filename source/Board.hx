@@ -4,10 +4,13 @@ import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.util.FlxPoint;
 import haxe.ds.IntMap;
+import tiles.*;
+
+typedef BoardTiles = IntMap<IntMap<BoardTile>>;
 
 class Board extends FlxGroup
 {
-	var tiles : IntMap<IntMap<Tile>>;
+	var tiles : BoardTiles;
 	var remainingTiles : Array<TileType>;
 	var pendingTile : Null<PendingTile>;
 
@@ -25,14 +28,14 @@ class Board extends FlxGroup
 				remainingTiles.push(type);
 		}
 
-		tiles = new IntMap<IntMap<Tile>>();
+		tiles = new BoardTiles();
 
-		var tile = new Tile(0, 0, "initial-tile");
+		var tile = new BoardTile(0, 0, "initial-tile");
 		insertTile(tile);
 		FlxG.camera.focusOn(tile.getMidpoint());
 	}
 
-	public function getTile(x : Int, y : Int) : Null<Tile>
+	public function getTile(x : Int, y : Int) : Null<BoardTile>
 	{
 		var column = tiles.get(x);
 		if (column == null)
@@ -41,16 +44,16 @@ class Board extends FlxGroup
 		return column.get(y);
 	}
 
-	public function insertTile(tile : Tile)
+	public function insertTile(tile : BoardTile)
 	{
 		return setTile(tile.boardX, tile.boardY, tile);
 	}
 
-	public function setTile(x : Int, y : Int, tile : Tile)
+	public function setTile(x : Int, y : Int, tile : BoardTile)
 	{
 		var column = tiles.get(x);
 		if (column == null)
-			tiles.set(x, column = new IntMap<Tile>());
+			tiles.set(x, column = new IntMap<BoardTile>());
 
 		var oldTile = column.get(y);
 		if (oldTile != null)
@@ -100,7 +103,7 @@ class Board extends FlxGroup
 				{
 					if (pendingTile.getPositionState() == ValidPosition)
 					{
-						insertTile(pendingTile.createTile());
+						insertTile(pendingTile.createBoardTile());
 						FlxG.mouse.show();
 						remove(pendingTile);
 						pendingTile.destroy();

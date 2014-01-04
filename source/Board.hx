@@ -61,30 +61,55 @@ class Board extends FlxGroup
 		column.set(y, tile);
 	}
 
+
+	private var dragDistance : Float = 0.0;
+	private var lastMouseDrag : FlxPoint;
+
 	public override function update()
 	{
 		super.update();
 
 		if (FlxG.mouse.justPressed)
 		{
-			if (pendingTile == null)
+			lastMouseDrag = new FlxPoint(FlxG.mouse.screenX, FlxG.mouse.screenY);
+		}
+		else if (FlxG.mouse.pressed)
+		{
+			var newMouseDrag = new FlxPoint(FlxG.mouse.screenX, FlxG.mouse.screenY);
+			var distance = newMouseDrag.distanceTo(lastMouseDrag);
+
+			FlxG.camera.scroll.x += (lastMouseDrag.x - newMouseDrag.x);
+			FlxG.camera.scroll.y += (lastMouseDrag.y - newMouseDrag.y);
+			dragDistance += distance;
+			lastMouseDrag = newMouseDrag;
+		}
+		else if (FlxG.mouse.justReleased)
+		{
+			// TODO: Actually have a button to click for this path, rather than single click.
+			if (dragDistance < 5.0)
 			{
-				FlxG.mouse.hide();
-				var type = remainingTiles.splice(Std.random(remainingTiles.length), 1).pop();
-				pendingTile = new PendingTile(this, type);
-				add(pendingTile);
-			}
-			else
-			{
-				if (pendingTile.getPositionState() == ValidPosition)
+				if (pendingTile == null)
 				{
-					insertTile(pendingTile.createTile());
-					FlxG.mouse.show();
-					remove(pendingTile);
-					pendingTile.destroy();
-					pendingTile = null;
+					FlxG.mouse.hide();
+					// TODO: Don't crash when we run out of tiles.
+					var type = remainingTiles.splice(Std.random(remainingTiles.length), 1).pop();
+					pendingTile = new PendingTile(this, type);
+					add(pendingTile);
+				}
+				else
+				{
+					if (pendingTile.getPositionState() == ValidPosition)
+					{
+						insertTile(pendingTile.createTile());
+						FlxG.mouse.show();
+						remove(pendingTile);
+						pendingTile.destroy();
+						pendingTile = null;
+					}
 				}
 			}
+			dragDistance = 0.0;
+			lastMouseDrag = null;
 		}
 
 		if (FlxG.keys.justPressed.SPACE && pendingTile != null)

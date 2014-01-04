@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<app title="landscapes" file="landscapes" main="Main" version="0.0.1" company="HaxeFlixel" />
+	<app title="Landscapes" file="landscapes" main="Main" version="0.0.1" company="bitSpatter" />
 	
 	<window width="800" height="600" fps="60" orientation="portrait" resizable="true" if="web" />
 

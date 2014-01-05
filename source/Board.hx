@@ -4,9 +4,12 @@ import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.util.FlxPoint;
 import haxe.ds.IntMap;
+
 import tiles.*;
+import tiles.TileType;
 
 typedef BoardTiles = IntMap<IntMap<BoardTile>>;
+typedef Node = { quadrant : Quadrant, tile : BoardTile, cameFrom : Direction };
 
 class Board extends FlxGroup
 {
@@ -125,6 +128,9 @@ class Board extends FlxGroup
 
 		if (FlxG.keys.justPressed.SPACE && pendingTile != null)
 			pendingTile.rotate();
+
+		if (FlxG.keys.justPressed.G)
+			findConnectedFromMouse();
 	}
 
 	public static function getX(boardX : Int)
@@ -156,5 +162,60 @@ class Board extends FlxGroup
 			case South: getTile(boardX, boardY + 1);
 			case West:  getTile(boardX - 1, boardY);
 		}
+	}
+
+	private function findConnectedFromMouse()
+	{
+		var boardX = getBoardX(FlxG.mouse.x);
+		var boardY = getBoardY(FlxG.mouse.y);
+
+		var initialTile = getTile(boardX, boardY);
+		if (initialTile == null)
+			return;
+
+		// Find our position inside the tile.
+		var offsetX = FlxG.mouse.x - getX(boardX);
+		var offsetY = FlxG.mouse.y - getY(boardY);
+		var initialQuadrant = Quadrants.fromCoordinate(offsetX, offsetY);
+
+		var connectedNodes : Array<Node> = new Array<Node>();
+		connectedNodes.push({ quadrant: initialQuadrant, tile: initialTile, cameFrom: null });
+
+		var i = 0;
+		while (i < connectedNodes.length)
+		{
+			var node = connectedNodes[i++];
+			var tile = node.tile;
+
+			// This gets all the quadrants that are a part of the same grass patch as the given quadrant.
+			var quadrants = tile.findGrassGroupContainingQuadrant(node.quadrant);
+			for (quadrant in quadrants)
+			{
+				var nearbyNodes = getNodesNearQuadrant(tile, quadrant, node.cameFrom);
+				for (nearbyNode in nearbyNodes)
+					connectedNodes.push(nearbyNode);
+			}
+		}
+
+		trace(connectedNodes);
+	}
+
+	private function getNodesNearQuadrant(tile : BoardTile, quadrant : Quadrant, exceptFrom : Direction)
+	{
+		var nearbyNodes = new List<Node>();
+
+		// What neighbors we need to look at from this quadrant, and what quadrants in them are relevant
+		var directions = Quadrants.toDirections(quadrant);
+		for (directionAndQuadrant in directions)
+		{
+			var direction = directionAndQuadrant.direction;
+			if (direction == exceptFrom)
+				continue;
+
+			var neighbor = getNeighbor(tile.boardX, tile.boardY, direction);
+			if (neighbor != null)
+				nearbyNodes.add({ quadrant: directionAndQuadrant.quadrant, tile: neighbor, cameFrom : Directions.rotate(direction, 2) });
+		}
+		return nearbyNodes;
 	}
 }

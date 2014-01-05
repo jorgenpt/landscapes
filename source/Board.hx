@@ -10,6 +10,9 @@ typedef BoardTiles = IntMap<IntMap<BoardTile>>;
 
 class Board extends FlxGroup
 {
+	// TODO: We can probably kill this completely, and allow "infinite" boards.
+	static public inline var BOARD_SIZE = 128;
+
 	var tiles : BoardTiles;
 	var remainingTiles : Array<TileType>;
 	var pendingTile : Null<PendingTile>;
@@ -37,6 +40,11 @@ class Board extends FlxGroup
 
 	public function getTile(x : Int, y : Int) : Null<BoardTile>
 	{
+		if (x < (-BOARD_SIZE/2 + 1) || x > BOARD_SIZE/2)
+			return null;
+		if (y < (-BOARD_SIZE/2 + 1) || y > BOARD_SIZE/2)
+			return null;
+
 		var column = tiles.get(x);
 		if (column == null)
 			return null;
@@ -121,11 +129,32 @@ class Board extends FlxGroup
 
 	public static function getX(boardX : Int)
 	{
-		return (GameClass.BOARD_SIZE / 2.0 + boardX - 1) * TileBase.TILE_SIZE;
+		return (BOARD_SIZE / 2.0 + boardX - 1) * TileBase.TILE_SIZE;
 	}
 
 	public static function getY(boardY : Int)
 	{
-		return (GameClass.BOARD_SIZE / 2.0 + boardY - 1) * TileBase.TILE_SIZE;
+		return (BOARD_SIZE / 2.0 + boardY - 1) * TileBase.TILE_SIZE;
+	}
+
+	public static function getBoardX(x : Float)
+	{
+		return Math.ceil(x / TileBase.TILE_SIZE - BOARD_SIZE / 2.0);
+	}
+
+	public static function getBoardY(y : Float)
+	{
+		return Math.ceil(y / TileBase.TILE_SIZE - BOARD_SIZE / 2.0);
+	}
+
+	public function getNeighbor(boardX : Int, boardY : Int, direction : Direction)
+	{
+		return switch (direction)
+		{
+			case North: getTile(boardX, boardY - 1);
+			case East:  getTile(boardX + 1, boardY);
+			case South: getTile(boardX, boardY + 1);
+			case West:  getTile(boardX - 1, boardY);
+		}
 	}
 }

@@ -55,8 +55,8 @@ class PendingTile extends TileBase
 		x = FlxG.mouse.x;
 		y = FlxG.mouse.y;
 
-		var newBoardX = Math.ceil(x / TileBase.TILE_SIZE - GameClass.BOARD_SIZE / 2.0);
-		var newBoardY = Math.ceil(y / TileBase.TILE_SIZE - GameClass.BOARD_SIZE / 2.0);
+		var newBoardX = Board.getBoardX(x);
+		var newBoardY = Board.getBoardY(y);
 
 		if (rotationDirty || newBoardX != boardX || newBoardY != boardY)
 		{
@@ -91,7 +91,7 @@ class PendingTile extends TileBase
 	{
 		var anyValidNeighbors = false;
 
-		var tileNorth = board.getTile(boardX, boardY - 1);
+		var tileNorth = board.getNeighbor(boardX, boardY, North);
 		if (tileNorth != null)
 		{
 			if (getEdge(North) != tileNorth.getEdge(South))
@@ -99,7 +99,7 @@ class PendingTile extends TileBase
 			anyValidNeighbors = true;
 		}
 
-		var tileEast = board.getTile(boardX + 1, boardY);
+		var tileEast = board.getNeighbor(boardX, boardY, East);
 		if (tileEast != null)
 		{
 			if (getEdge(East) != tileEast.getEdge(West))
@@ -107,7 +107,7 @@ class PendingTile extends TileBase
 			anyValidNeighbors = true;
 		}
 
-		var tileSouth = board.getTile(boardX, boardY + 1);
+		var tileSouth = board.getNeighbor(boardX, boardY, South);
 		if (tileSouth != null)
 		{
 			if (getEdge(South) != tileSouth.getEdge(North))
@@ -115,7 +115,7 @@ class PendingTile extends TileBase
 			anyValidNeighbors = true;
 		}
 
-		var tileWest = board.getTile(boardX - 1, boardY);
+		var tileWest = board.getNeighbor(boardX, boardY, West);
 		if (tileWest != null)
 		{
 			if (getEdge(West) != tileWest.getEdge(East))

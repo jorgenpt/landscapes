@@ -7,7 +7,6 @@ import flixel.FlxState;
 
 class GameClass extends FlxGame
 {
-	static public inline var BOARD_SIZE = 128;
 	var initialState:Class<FlxState> = PlayState; // The FlxState the game starts with.
 	var zoom:Float = 0.5;
 	var framerate:Int = 60; // How many frames per second the game should run at.

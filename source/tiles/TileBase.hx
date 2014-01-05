@@ -44,9 +44,9 @@ class TileBase extends FlxSprite
 	public override function toString()
 	{
 		return
-			"N: " + getEdge(North) + " " +
-			"E: " + getEdge(East) + " " +
-			"S: " + getEdge(South) + " " +
-			"W: " + getEdge(West);
+			'N: ${getEdge(North)}' +
+			'E: ${getEdge(East)}' +
+			'S: ${getEdge(South)}' +
+			'W: ${getEdge(West)}';
 	}
 }

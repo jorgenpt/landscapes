@@ -37,6 +37,11 @@ class Directions {
 		var index = Type.enumIndex(d);
 		return (index + rotation) % 4;
 	}
+
+	public static function rotate(d : Direction, rotation : Int)
+	{
+		return Type.createEnumIndex(Direction, toIndex(d, rotation));
+	}
 }
 
 enum Quadrant {
@@ -59,6 +64,40 @@ class Quadrants {
 			case "NE": Northeast;
 			default: throw 'Invalid quadrantName: $quadrantName';
 		}
+	}
+
+	public static function fromCoordinate(x : Float, y : Float)
+	{
+		if (y >= TileBase.TILE_SIZE / 2.0)
+		{
+			if (x < TileBase.TILE_SIZE / 2.0)
+				return Southwest;
+			else
+				return Southeast;
+		}
+		else
+		{
+			if (x < TileBase.TILE_SIZE / 2.0)
+				return Northwest;
+			else
+				return Northeast;
+		}
+	}
+
+	public static function toDirections(quadrant : Quadrant)
+	{
+		return switch (quadrant)
+		{
+			case Northwest: [{direction: North, quadrant: Southwest}, {direction: West, quadrant: Northeast}];
+			case Southwest: [{direction: South, quadrant: Northwest}, {direction: West, quadrant: Southeast}];
+			case Southeast: [{direction: South, quadrant: Northeast}, {direction: East, quadrant: Southwest}];
+			case Northeast: [{direction: North, quadrant: Southeast}, {direction: East, quadrant: Northwest}];
+		}
+	}
+
+	public static function rotate(quadrant : Quadrant, rotation : Int)
+	{
+		return Type.createEnumIndex(Quadrant, (Type.enumIndex(quadrant) + rotation) % 4);
 	}
 }
 

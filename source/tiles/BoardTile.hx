@@ -24,4 +24,9 @@ class BoardTile extends TileBase
 		this.y = Board.getY(boardY);
 		return this.boardY = boardY;
 	}
+
+	public override function toString()
+	{
+		return '($boardX, $boardY) [${type.name}]';
+	}
 }

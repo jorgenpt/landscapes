@@ -2,7 +2,7 @@ package tiles;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import tiles.TileType;
+import tiles.Direction;
 
 enum PositionState
 {

@@ -6,7 +6,8 @@ import flixel.util.FlxPoint;
 import haxe.ds.IntMap;
 
 import tiles.*;
-import tiles.TileType;
+import tiles.Direction;
+import tiles.Quadrant;
 
 typedef BoardTiles = IntMap<IntMap<BoardTile>>;
 typedef Node = { quadrant : Quadrant, tile : BoardTile, cameFrom : Direction };

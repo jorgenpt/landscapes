@@ -1,9 +1,10 @@
 package tiles;
 
 import flixel.FlxSprite;
-
 import haxe.ds.Vector;
-import tiles.TileType;
+
+import tiles.Direction;
+import tiles.Quadrant;
 
 class TileBase extends FlxSprite
 {

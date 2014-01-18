@@ -94,7 +94,7 @@ class PendingTile extends TileBase
 		var tileNorth = board.getNeighbor(boardX, boardY, North);
 		if (tileNorth != null)
 		{
-			if (getEdge(North) != tileNorth.getEdge(South))
+			if (getEdgeType(North) != tileNorth.getEdgeType(South))
 				return InvalidNeighbors;
 			anyValidNeighbors = true;
 		}
@@ -102,7 +102,7 @@ class PendingTile extends TileBase
 		var tileEast = board.getNeighbor(boardX, boardY, East);
 		if (tileEast != null)
 		{
-			if (getEdge(East) != tileEast.getEdge(West))
+			if (getEdgeType(East) != tileEast.getEdgeType(West))
 				return InvalidNeighbors;
 			anyValidNeighbors = true;
 		}
@@ -110,7 +110,7 @@ class PendingTile extends TileBase
 		var tileSouth = board.getNeighbor(boardX, boardY, South);
 		if (tileSouth != null)
 		{
-			if (getEdge(South) != tileSouth.getEdge(North))
+			if (getEdgeType(South) != tileSouth.getEdgeType(North))
 				return InvalidNeighbors;
 			anyValidNeighbors = true;
 		}
@@ -118,7 +118,7 @@ class PendingTile extends TileBase
 		var tileWest = board.getNeighbor(boardX, boardY, West);
 		if (tileWest != null)
 		{
-			if (getEdge(West) != tileWest.getEdge(East))
+			if (getEdgeType(West) != tileWest.getEdgeType(East))
 				return InvalidNeighbors;
 			anyValidNeighbors = true;
 		}

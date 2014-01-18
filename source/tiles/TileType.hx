@@ -5,21 +5,21 @@ import flixel.system.FlxAssets;
 import haxe.ds.Vector;
 import haxe.ds.StringMap;
 
-enum Edge {
+enum EdgeType {
 	Grass;
 	Road;
 	City;
 }
 
-class Edges {
-	public static function fromString(edgeName : String)
+class EdgeTypes {
+	public static function fromString(edgeTypeName : String)
 	{
-		return switch (edgeName.toUpperCase())
+		return switch (edgeTypeName.toUpperCase())
 		{
 			case "G": Grass;
 			case "R": Road;
 			case "C": City;
-			default: throw 'Invalid edgeName: $edgeName';
+			default: throw 'Invalid edgeTypeName: $edgeTypeName';
 		}
 	}
 }
@@ -123,7 +123,7 @@ class Quadrants {
 
 class TileType 
 {
-	public var edges(default, null) : Vector<Edge>;
+	public var edges(default, null) : Vector<EdgeType>;
 	public var grassGroups(default, null) : Vector<Vector<Quadrant>>;
 	public var cityGroups(default, null) : Vector<Vector<Direction>>;
 	public var bitmapData(default, null) : BitmapData;
@@ -141,11 +141,11 @@ class TileType
 		if (edgeList == null || edgeList.length != 4)
 			throw "edgeList not valid for tile $name: $edgeList";
 
-		edges = new Vector<Edge>(4);
-		edges[Directions.toIndex(North)] = Edges.fromString(edgeList[0]);
-		edges[Directions.toIndex(East)] = Edges.fromString(edgeList[1]);
-		edges[Directions.toIndex(South)] = Edges.fromString(edgeList[2]);
-		edges[Directions.toIndex(West)] = Edges.fromString(edgeList[3]);
+		edges = new Vector<EdgeType>(4);
+		edges[Directions.toIndex(North)] = EdgeTypes.fromString(edgeList[0]);
+		edges[Directions.toIndex(East)] = EdgeTypes.fromString(edgeList[1]);
+		edges[Directions.toIndex(South)] = EdgeTypes.fromString(edgeList[2]);
+		edges[Directions.toIndex(West)] = EdgeTypes.fromString(edgeList[3]);
 
 		grassGroups = createGroups(tileInfo.grassGroups, Quadrants.fromString);
 		cityGroups = createGroups(tileInfo.cityGroups, Directions.fromString);

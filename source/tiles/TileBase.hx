@@ -26,7 +26,7 @@ class TileBase extends FlxSprite
 		rotation = initialRotation;
 	}
 
-	public function getEdge(direction : Direction) : Edge
+	public function getEdgeType(direction : Direction) : EdgeType
 	{
 		return type.edges[Directions.toIndex(direction, rotation)];
 	}
@@ -71,9 +71,9 @@ class TileBase extends FlxSprite
 	public override function toString()
 	{
 		return
-			'N: ${getEdge(North)}' +
-			'E: ${getEdge(East)}' +
-			'S: ${getEdge(South)}' +
-			'W: ${getEdge(West)}';
+			'N: ${getEdgeType(North)}' +
+			'E: ${getEdgeType(East)}' +
+			'S: ${getEdgeType(South)}' +
+			'W: ${getEdgeType(West)}';
 	}
 }

@@ -32,6 +32,18 @@ enum Direction {
 }
 
 class Directions {
+	public static function fromString(directionName : String)
+	{
+		return switch (directionName.toUpperCase())
+		{
+			case "W": West;
+			case "S": South;
+			case "E": East;
+			case "N": North;
+			default: throw 'Invalid directionName: $directionName';
+		}
+	}
+
 	public static function toIndex(d : Direction, rotation : Int = 0) : Int
 	{
 		var index = Type.enumIndex(d);
@@ -50,8 +62,6 @@ enum Quadrant {
 	Southeast;
 	Northeast;
 }
-
-typedef GrassGroups = Vector<Vector<Quadrant>>;
 
 class Quadrants {
 	public static function fromString(quadrantName : String)
@@ -99,12 +109,23 @@ class Quadrants {
 	{
 		return Type.createEnumIndex(Quadrant, (Type.enumIndex(quadrant) + rotation) % 4);
 	}
+
+	public static function toIndex(quadrant : Quadrant) : Int
+	{
+		return Type.enumIndex(quadrant);
+	}
+
+	public static function fromIndex(index : Int)
+	{
+		return Type.createEnumIndex(Quadrant, index);
+	}
 }
 
 class TileType 
 {
 	public var edges(default, null) : Vector<Edge>;
-	public var grassGroups(default, null) : GrassGroups;
+	public var grassGroups(default, null) : Vector<Vector<Quadrant>>;
+	public var cityGroups(default, null) : Vector<Vector<Direction>>;
 	public var bitmapData(default, null) : BitmapData;
 	public var name(default, null) : String;
 	public var boardCount(default, null) : Int;
@@ -126,21 +147,27 @@ class TileType
 		edges[Directions.toIndex(South)] = Edges.fromString(edgeList[2]);
 		edges[Directions.toIndex(West)] = Edges.fromString(edgeList[3]);
 
-		var grassGroupsList : Array<Array<String>> = tileInfo.grassGroups;
-		if (grassGroupsList == null)
-			grassGroups = new GrassGroups(0);
-		else
-		{
-			grassGroups = new GrassGroups(grassGroupsList.length);
-			for (i in 0...grassGroupsList.length)
-			{
-				var quadrants = grassGroupsList[i];
-				grassGroups[i] = new Vector<Quadrant>(quadrants.length);
+		grassGroups = createGroups(tileInfo.grassGroups, Quadrants.fromString);
+		cityGroups = createGroups(tileInfo.cityGroups, Directions.fromString);
+	}
 
-				for (j in 0...quadrants.length)
-					grassGroups[i][j] = Quadrants.fromString(quadrants[j]);
-			}
+	@:generic private function createGroups<T>(groupsList : Array<Array<String>>, fromString : String -> T)
+	{
+		var length = 0;
+		if (groupsList != null)
+			length = groupsList.length;
+
+		var groups = new Vector<Vector<T>>(length);
+		for (i in 0...length)
+		{
+			var elements = groupsList[i];
+			groups[i] = new Vector<T>(elements.length);
+
+			for (j in 0...elements.length)
+				groups[i][j] = fromString(elements[j]);
 		}
+
+		return groups;
 	}
 
 	static var types : StringMap<TileType>;

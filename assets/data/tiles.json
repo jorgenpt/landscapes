@@ -2,7 +2,8 @@
 	"initial-tile": {
 		"count": 0,
 		"edges": ["C", "R", "G", "R"],
-		"grassGroups": [["NW", "NE"], ["SW", "SE"]]
+		"grassGroups": [["NW", "NE"], ["SW", "SE"]],
+		"cityGroups": [["N"]]
 	},
 	"jay-road": {
 		"count": 9,
@@ -13,5 +14,16 @@
 		"count": 8,
 		"edges": ["G", "R", "G", "R"],
 		"grassGroups": [["NE", "NW"], ["SW", "SE"]]
+	},
+	"dueling-cities": {
+		"count": 3,
+		"edges": ["G", "C", "G", "C"],
+		"grassGroups": [["NE", "NW", "SW", "SE"]],
+		"cityGroups": [["W"], ["E"]]
+	},
+	"big-city": {
+		"count": 1,
+		"edges": ["C", "C", "C", "C"],
+		"cityGroups": [["N", "E", "S", "W"]]
 	}
 }

@@ -2,6 +2,7 @@ package tiles;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import tiles.TileType;
 
 enum PositionState
 {
@@ -91,36 +92,16 @@ class PendingTile extends TileBase
 	{
 		var anyValidNeighbors = false;
 
-		var tileNorth = board.getNeighbor(boardX, boardY, North);
-		if (tileNorth != null)
+		var directions : Array<Direction> = [North, East, South, West];
+		for (direction in directions)
 		{
-			if (getEdgeType(North) != tileNorth.getEdgeType(South))
-				return InvalidNeighbors;
-			anyValidNeighbors = true;
-		}
-
-		var tileEast = board.getNeighbor(boardX, boardY, East);
-		if (tileEast != null)
-		{
-			if (getEdgeType(East) != tileEast.getEdgeType(West))
-				return InvalidNeighbors;
-			anyValidNeighbors = true;
-		}
-
-		var tileSouth = board.getNeighbor(boardX, boardY, South);
-		if (tileSouth != null)
-		{
-			if (getEdgeType(South) != tileSouth.getEdgeType(North))
-				return InvalidNeighbors;
-			anyValidNeighbors = true;
-		}
-
-		var tileWest = board.getNeighbor(boardX, boardY, West);
-		if (tileWest != null)
-		{
-			if (getEdgeType(West) != tileWest.getEdgeType(East))
-				return InvalidNeighbors;
-			anyValidNeighbors = true;
+			var neighbor = board.getNeighbor(boardX, boardY, direction);
+			if (neighbor != null)
+			{
+				if (getEdgeType(direction) != neighbor.getEdgeType(Directions.rotate(direction, 2)))
+					return InvalidNeighbors;
+				anyValidNeighbors = true;
+			}
 		}
 
 		if (anyValidNeighbors)

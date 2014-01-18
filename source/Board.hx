@@ -147,12 +147,12 @@ class Board extends FlxGroup
 
 	public static function getBoardX(x : Float)
 	{
-		return Math.ceil(x / TileBase.TILE_SIZE - BOARD_SIZE / 2.0);
+		return Math.ceil((x + TileBase.TILE_SIZE / 2.0) / TileBase.TILE_SIZE - BOARD_SIZE / 2.0);
 	}
 
 	public static function getBoardY(y : Float)
 	{
-		return Math.ceil(y / TileBase.TILE_SIZE - BOARD_SIZE / 2.0);
+		return Math.ceil((y + TileBase.TILE_SIZE / 2.0) / TileBase.TILE_SIZE - BOARD_SIZE / 2.0);
 	}
 
 	public function getNeighbor(boardX : Int, boardY : Int, direction : Direction)

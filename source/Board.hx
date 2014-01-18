@@ -10,6 +10,7 @@ import tiles.TileType;
 
 typedef BoardTiles = IntMap<IntMap<BoardTile>>;
 typedef Node = { quadrant : Quadrant, tile : BoardTile, cameFrom : Direction };
+typedef CityNode = { edge : Direction, tile : BoardTile };
 
 class Board extends FlxGroup
 {
@@ -233,7 +234,7 @@ class Board extends FlxGroup
 				var neighbor = getNeighbor(boardX, boardY, edge);
 				if (neighbor != null)
 				{
-					cityNumber = propagateCityNumber(neighbor, Directions.mirror(edge), null);
+					cityNumber = propagateCityNumber(neighbor, Directions.mirror(edge));
 					break;
 				}
 			}
@@ -242,19 +243,42 @@ class Board extends FlxGroup
 			{
 				cityNumber = BoardTile.createNewCity();
 				for (edge in cityGroup)
-				{
 					tile.cities[Directions.toIndex(edge)] = cityNumber;
-					trace('$boardX, $boardY ($edge) is now a member of city: $cityNumber');
-				}
 			}
 		}
 	}
 
-	private function propagateCityNumber(tile : BoardTile, edge : Direction, fromEdge : Null<Direction>)
+	private function propagateCityNumber(initialTile : BoardTile, edge : Direction)
 	{
-		var cityNumber = tile.cities[Directions.toIndex(edge)];
+		var cityNumber = initialTile.cities[Directions.toIndex(edge)];
 
-		// TODO.
+		var connectedNodes : Array<CityNode> = new Array<CityNode>();
+		connectedNodes.push({ edge: edge, tile: initialTile });
+
+		var i = 0;
+		while (i < connectedNodes.length)
+		{
+			var node = connectedNodes[i++];
+			var tile = node.tile;
+
+			var edges = tile.findCityGroupContainingEdge(node.edge);
+			for (edge in edges)
+			{
+				tile.cities[Directions.toIndex(edge)] = cityNumber;
+
+				var neighbor = getNeighbor(tile.boardX, tile.boardY, edge);
+				if (neighbor != null)
+				{
+					var neighborEdgeIndex = Directions.toIndex(edge, 2);
+					if (neighbor.cities[neighborEdgeIndex] == cityNumber)
+						continue;
+
+					neighbor.cities[neighborEdgeIndex] = cityNumber;
+					connectedNodes.push({ edge: Directions.fromIndex(neighborEdgeIndex), tile: neighbor });
+				}
+			}
+		}
+
 		return cityNumber;
 	}
 }

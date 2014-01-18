@@ -56,9 +56,14 @@ class Directions {
 		return (index + rotation) % 4;
 	}
 
+	public static function fromIndex(index : Int)
+	{
+		return Type.createEnumIndex(Direction, index);
+	}
+
 	public static function rotate(d : Direction, rotation : Int)
 	{
-		return Type.createEnumIndex(Direction, toIndex(d, rotation));
+		return fromIndex(toIndex(d, rotation));
 	}
 
 	public static function mirror(d : Direction)

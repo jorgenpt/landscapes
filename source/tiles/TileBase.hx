@@ -57,6 +57,18 @@ class TileBase extends FlxSprite
 		return new Vector<Quadrant>(0);
 	}
 
+	public function findCityGroupContainingEdge(edge : Direction)
+	{
+		var groups = getRotatedCityGroups();
+		for (group in groups)
+		{
+			if (vectorContains(group, edge))
+				return group;
+		}
+
+		return new Vector<Direction>(0);
+	}
+
 	public function getRotatedCityGroups()
 	{
 		var cityGroups = new Vector<Vector<Direction>>(type.cityGroups.length);

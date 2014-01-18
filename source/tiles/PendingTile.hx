@@ -92,8 +92,7 @@ class PendingTile extends TileBase
 	{
 		var anyValidNeighbors = false;
 
-		var directions : Array<Direction> = [North, East, South, West];
-		for (direction in directions)
+		for (direction in Directions.all)
 		{
 			var neighbor = board.getNeighbor(boardX, boardY, direction);
 			if (neighbor != null)

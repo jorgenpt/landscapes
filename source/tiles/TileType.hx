@@ -32,6 +32,12 @@ enum Direction {
 }
 
 class Directions {
+	public static var all(default, null) : Vector<Direction>;
+	static function __init__()
+	{
+		all = Vector.fromArrayCopy(Type.allEnums(Direction));
+	}
+
 	public static function fromString(directionName : String)
 	{
 		return switch (directionName.toUpperCase())

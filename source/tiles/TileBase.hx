@@ -57,6 +57,20 @@ class TileBase extends FlxSprite
 		return new Vector<Quadrant>(0);
 	}
 
+	public function getRotatedCityGroups()
+	{
+		var cityGroups = new Vector<Vector<Direction>>(type.cityGroups.length);
+		for (i in 0...cityGroups.length)
+		{
+			var unrotatedCityGroup = type.cityGroups[i];
+			cityGroups[i] = new Vector<Direction>(unrotatedCityGroup.length);
+			for (j in 0...cityGroups[i].length)
+				cityGroups[i][j] = Directions.rotate(unrotatedCityGroup[j], rotation);
+		}
+
+		return cityGroups;
+	}
+
 	public function rotate()
 	{
 		rotation = (rotation + 1) % 4;

@@ -97,7 +97,7 @@ class PendingTile extends TileBase
 			var neighbor = board.getNeighbor(boardX, boardY, direction);
 			if (neighbor != null)
 			{
-				if (getEdgeType(direction) != neighbor.getEdgeType(Directions.rotate(direction, 2)))
+				if (getEdgeType(direction) != neighbor.getEdgeType(Directions.mirror(direction)))
 					return InvalidNeighbors;
 				anyValidNeighbors = true;
 			}

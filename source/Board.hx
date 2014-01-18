@@ -73,6 +73,8 @@ class Board extends FlxGroup
 			add(tile);
 
 		column.set(y, tile);
+
+		updateCities(x, y);
 	}
 
 
@@ -214,8 +216,45 @@ class Board extends FlxGroup
 
 			var neighbor = getNeighbor(tile.boardX, tile.boardY, direction);
 			if (neighbor != null)
-				nearbyNodes.add({ quadrant: directionAndQuadrant.quadrant, tile: neighbor, cameFrom : Directions.rotate(direction, 2) });
+				nearbyNodes.add({ quadrant: directionAndQuadrant.quadrant, tile: neighbor, cameFrom : Directions.mirror(direction) });
 		}
 		return nearbyNodes;
+	}
+
+	private function updateCities(boardX : Int, boardY : Int)
+	{
+		var tile = getTile(boardX, boardY);
+		var cityGroups = tile.getRotatedCityGroups();
+		for (cityGroup in cityGroups)
+		{
+			var cityNumber = BoardTile.INVALID_CITY;
+			for (edge in cityGroup)
+			{
+				var neighbor = getNeighbor(boardX, boardY, edge);
+				if (neighbor != null)
+				{
+					cityNumber = propagateCityNumber(neighbor, Directions.mirror(edge), null);
+					break;
+				}
+			}
+
+			if (cityNumber == BoardTile.INVALID_CITY)
+			{
+				cityNumber = BoardTile.createNewCity();
+				for (edge in cityGroup)
+				{
+					tile.cities[Directions.toIndex(edge)] = cityNumber;
+					trace('$boardX, $boardY ($edge) is now a member of city: $cityNumber');
+				}
+			}
+		}
+	}
+
+	private function propagateCityNumber(tile : BoardTile, edge : Direction, fromEdge : Null<Direction>)
+	{
+		var cityNumber = tile.cities[Directions.toIndex(edge)];
+
+		// TODO.
+		return cityNumber;
 	}
 }

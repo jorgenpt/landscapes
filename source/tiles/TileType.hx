@@ -60,6 +60,11 @@ class Directions {
 	{
 		return Type.createEnumIndex(Direction, toIndex(d, rotation));
 	}
+
+	public static function mirror(d : Direction)
+	{
+		return rotate(d, 2);
+	}
 }
 
 enum Quadrant {
